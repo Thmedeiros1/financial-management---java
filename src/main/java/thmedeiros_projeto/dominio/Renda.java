@@ -2,8 +2,9 @@ package thmedeiros_projeto.dominio;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
 import thmedeiros_projeto.enums.Moeda;
-import thmedeiros_projeto.dominio.TipoRenda;
+import thmedeiros_projeto.enums.TipoRenda;
 
 public class Renda extends Movimentacao {
 
@@ -17,12 +18,4 @@ public class Renda extends Movimentacao {
     public TipoRenda getTipo() {
         return tipo;
     }
-}
-
-
-public enum TipoRenda {
-    SALARIO,
-    FREELANCE,
-    INVESTIMENTOS,
-    OUTROS
 }

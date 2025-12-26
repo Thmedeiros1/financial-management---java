@@ -2,8 +2,9 @@ package thmedeiros_projeto.dominio;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
 import thmedeiros_projeto.enums.Moeda;
-import thmedeiros_projeto.dominio.TipoDespesa;
+import thmedeiros_projeto.enums.TipoDespesa;
 
 public class Despesa extends Movimentacao {
 
@@ -17,14 +18,4 @@ public class Despesa extends Movimentacao {
     public TipoDespesa getTipo() {
         return tipo;
     }
-}
-
-public enum TipoDespesa {
-    ALIMENTACAO,
-    TRANSPORTE,
-    MORADIA,
-    SAUDE,
-    EDUCACAO,
-    LAZER,
-    OUTROS
 }

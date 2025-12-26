@@ -11,26 +11,65 @@ import thmedeiros_projeto.dominio.Despesa;
 import thmedeiros_projeto.enums.Moeda;
 import thmedeiros_projeto.enums.TipoRenda;
 import thmedeiros_projeto.enums.TipoDespesa;
-import thmedeiros_projeto.dominio.Movimentacao;
-import thmedeiros_projeto.servico.RelatorioD;
-import thmedeiros_projeto.servico.ConversorM;
-import thmedeiros_projeto.servico.RelatorioProgressao;
 
+import thmedeiros_projeto.servico.RelatorioProgressao;
 
 public class Main {
 
     public static void main(String[] args) {
 
-    Scanner sc = new Scanner(System.in);
-    Ano ano = new Ano(2025);
+        Scanner sc = new Scanner(System.in);
+        Ano ano = new Ano(2025);
 
-    boolean continuar = true;
+        boolean continuar = true;
 
-    while (continuar) {
+        System.out.println("=== CONTROLE FINANCEIRO ===");
 
-        System.out.println("\nDigite o tipo (1 - Renda | 2 - Despesa): ");
-        int opcao = sc.nextInt();
+        while (continuar) {
 
+            System.out.println("\n1 - Cadastrar Renda");
+            System.out.println("2 - Cadastrar Despesa");
+            System.out.println("3 - Ver Relatório Mensal");
+            System.out.println("4 - Ver Relatório Diário");
+            System.out.println("0 - Sair");
+
+            System.out.print("Escolha: ");
+            int opcao = sc.nextInt();
+
+            switch (opcao) {
+
+                case 1:
+                    cadastrarRenda(sc, ano);
+                    break;
+
+                case 2:
+                    cadastrarDespesa(sc, ano);
+                    break;
+
+                case 3:
+                    exibirRelatorio(sc, ano);
+                    break;
+
+                case 4:
+                    exibirRelatorioDiario(sc, ano);
+                    break;
+
+                case 0:
+                    continuar = false;
+                    break;
+
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        }
+
+        sc.close();
+        System.out.println("Programa encerrado.");
+    }
+
+    // MÉTODOS AUXILIARES
+
+    private static LocalDate lerData(Scanner sc) {
         System.out.print("Dia: ");
         int dia = sc.nextInt();
 
@@ -38,108 +77,128 @@ public class Main {
         int mes = sc.nextInt();
 
         System.out.print("Ano: ");
-        int anoDigitado = sc.nextInt();
+        int ano = sc.nextInt();
 
-        LocalDate data = LocalDate.of(anoDigitado, mes, dia);
+        return LocalDate.of(ano, mes, dia);
+    }
+
+    private static Moeda lerMoeda(Scanner sc) {
+        System.out.println("Moeda:");
+        System.out.println("1 - REAL | 2 - DOLAR | 3 - EURO");
+        int opcao = sc.nextInt();
+
+        switch (opcao) {
+            case 1:
+                return Moeda.REAL;
+            case 2:
+                return Moeda.DOLAR;
+            case 3:
+                return Moeda.EURO;
+            default:
+                System.out.println("Moeda inválida.");
+                return null;
+        }
+    }
+
+    private static void cadastrarRenda(Scanner sc, Ano ano) {
+
+        LocalDate data = lerData(sc);
 
         System.out.print("Valor: ");
         BigDecimal valor = sc.nextBigDecimal();
 
-        System.out.println("Moeda (1 - REAL | 2 - DOLAR | 3 - EURO): ");
-        int moedaOpcao = sc.nextInt();
+        Moeda moeda = lerMoeda(sc);
+        if (moeda == null) return;
 
-        Moeda moeda;
+        System.out.println("Tipo de renda:");
+        System.out.println("1 - SALARIO | 2 - FREELANCE");
+        int tipo = sc.nextInt();
 
-        switch (moedaOpcao) {
-            case 1 -> moeda = Moeda.REAL;
-            case 2 -> moeda = Moeda.DOLAR;
-            case 3 -> moeda = Moeda.EURO;
-            default -> {
-                System.out.println("Moeda inválida.");
-                continue;
-            }
-        }
+        TipoRenda tipoRenda =
+                (tipo == 1) ? TipoRenda.SALARIO : TipoRenda.FREELANCE;
 
-        if (opcao == 1) {
-            System.out.println("Tipo de renda:");
-            System.out.println("1 - SALARIO | 2 - FREELANCE");
+        Renda renda = new Renda(data, valor, moeda, tipoRenda);
+        ano.adicionarMovimentacao(renda);
 
-            int tipo = sc.nextInt();
-
-            TipoRenda tipoRenda =
-                    (tipo == 1) ? TipoRenda.SALARIO : TipoRenda.FREELANCE;
-
-            Renda renda = new Renda(data, valor, moeda, tipoRenda);
-            ano.adicionarMovimentacao(renda);
-
-        } else if (opcao == 2) {
-
-            System.out.println("Tipo de despesa:");
-            System.out.println("1 - ALIMENTACAO | 2 - MORADIA | 3 - TRANSPORTE");
-
-            int tipo = sc.nextInt();
-
-            TipoDespesa tipoDespesa;
-
-            switch (tipo) {
-                case 1 -> tipoDespesa = TipoDespesa.ALIMENTACAO;
-                case 2 -> tipoDespesa = TipoDespesa.MORADIA;
-                case 3 -> tipoDespesa = TipoDespesa.TRANSPORTE;
-                default -> {
-                    System.out.println("Tipo inválido.");
-                    continue;
-                }
-            }
-
-            Despesa despesa = new Despesa(data, valor, moeda, tipoDespesa);
-            ano.adicionarMovimentacao(despesa);
-        }
-
-        System.out.println("\nDeseja adicionar outra movimentação? (1 - Sim | 2 - Não)");
-        int resp = sc.nextInt();
-
-        if (resp != 1) {
-            continuar = false;
-        }
+        System.out.println("Renda cadastrada com sucesso.");
     }
 
-  System.out.println("\nEscolha a moeda do relatório:");
-System.out.println("1 - REAL | 2 - DOLAR | 3 - EURO");
-int opcaoMoedaRel = sc.nextInt();
+    private static void cadastrarDespesa(Scanner sc, Ano ano) {
 
-Moeda moedaRelatorio;
+        LocalDate data = lerData(sc);
 
-switch (opcaoMoedaRel) {
-    case 1 -> moedaRelatorio = Moeda.REAL;
-    case 2 -> moedaRelatorio = Moeda.DOLAR;
-    case 3 -> moedaRelatorio = Moeda.EURO;
-    default -> moedaRelatorio = Moeda.REAL;
-}
+        System.out.print("Valor: ");
+        BigDecimal valor = sc.nextBigDecimal();
 
-RelatorioProgressao relatorio =
-        new RelatorioProgressao(moedaRelatorio);
+        Moeda moeda = lerMoeda(sc);
+        if (moeda == null) return;
 
-System.out.print("Digite o mês para consulta (1-12): ");
-int mesConsulta = sc.nextInt();
+        System.out.println("Tipo de despesa:");
+        System.out.println("1 - ALIMENTACAO | 2 - MORADIA | 3 - TRANSPORTE");
+        int tipo = sc.nextInt();
 
-BigDecimal rendaMes =
-        relatorio.totalRendasPorMes(ano, mesConsulta);
+        TipoDespesa tipoDespesa;
 
-BigDecimal despesaMes =
-        relatorio.totalDespesasPorMes(ano, mesConsulta);
+        switch (tipo) {
+            case 1:
+                tipoDespesa = TipoDespesa.ALIMENTACAO;
+                break;
+            case 2:
+                tipoDespesa = TipoDespesa.MORADIA;
+                break;
+            case 3:
+                tipoDespesa = TipoDespesa.TRANSPORTE;
+                break;
+            default:
+                System.out.println("Tipo inválido.");
+                return;
+        }
 
-System.out.println("\n--- RELATÓRIO FINANCEIRO ---");
-System.out.println("Moeda: " + moedaRelatorio);
-System.out.println("Total de rendas: " + rendaMes);
-System.out.println("Total de despesas: " + despesaMes);
-System.out.println("Saldo: " + rendaMes.subtract(despesaMes));
+        Despesa despesa = new Despesa(data, valor, moeda, tipoDespesa);
+        ano.adicionarMovimentacao(despesa);
 
-
-        sc.close();
-
-        System.out.println("\nCadastro finalizado.");
+        System.out.println("Despesa cadastrada com sucesso.");
     }
 
+    private static void exibirRelatorio(Scanner sc, Ano ano) {
+
+        System.out.print("Digite o mês (1-12): ");
+        int mes = sc.nextInt();
+
+        Moeda moedaPadrao = lerMoeda(sc);
+        if (moedaPadrao == null) return;
+
+        RelatorioProgressao relatorio =
+                new RelatorioProgressao(moedaPadrao);
+
+        BigDecimal totalRendas =
+                relatorio.totalRendasPorMes(ano, mes);
+
+        BigDecimal totalDespesas =
+                relatorio.totalDespesasPorMes(ano, mes);
+
+        System.out.println("\n=== RELATÓRIO MENSAL ===");
+        System.out.println("Total de Rendas: " + totalRendas + " " + moedaPadrao);
+        System.out.println("Total de Despesas: " + totalDespesas + " " + moedaPadrao);
+        System.out.println("Saldo: " +
+                totalRendas.subtract(totalDespesas) + " " + moedaPadrao);
+    }
+
+    private static void exibirRelatorioDiario(Scanner sc, Ano ano) {
+
+        System.out.print("Digite o mês (1-12): ");
+        int mes = sc.nextInt();
+
+        Moeda moedaPadrao = lerMoeda(sc);
+        if (moedaPadrao == null) return;
+
+        RelatorioProgressao relatorio =
+                new RelatorioProgressao(moedaPadrao);
+
+        relatorio.relatorioDiario(ano, mes);
+    }
 }
+
+
 
 

@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import thmedeiros_projeto.enums.Moeda;
 
 public abstract class Movimentacao {
+
     protected LocalDate data;
     protected BigDecimal valor;
     protected Moeda moeda;
@@ -14,16 +15,16 @@ public abstract class Movimentacao {
         this.valor = valor;
         this.moeda = moeda;
     }
-    
+
+    public LocalDate getData() {
+        return data;
+    }
+
     public BigDecimal getValor() {
         return valor;
     }
 
     public Moeda getMoeda() {
         return moeda;
-    }
-
-    public LocalDate getData() {
-        return data;
     }
 }
