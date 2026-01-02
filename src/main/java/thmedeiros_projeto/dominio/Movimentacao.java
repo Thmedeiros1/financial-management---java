@@ -2,7 +2,9 @@ package thmedeiros_projeto.dominio;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
 import thmedeiros_projeto.enums.Moeda;
+import thmedeiros_projeto.servico.ConversorM;
 
 public abstract class Movimentacao {
 
@@ -27,4 +29,9 @@ public abstract class Movimentacao {
     public Moeda getMoeda() {
         return moeda;
     }
+
+    public BigDecimal getValorConvertido(Moeda moedaDestino) {
+        return ConversorM.converter(valor, moeda, moedaDestino);
+    }
 }
+

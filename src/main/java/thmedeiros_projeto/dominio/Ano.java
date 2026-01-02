@@ -13,8 +13,8 @@ public class Ano {
         this.movimentacoes = new ArrayList<>();
     }
 
-    public void adicionarMovimentacao(Movimentacao mov) {
-        movimentacoes.add(mov);
+    public void adicionarMovimentacao(Movimentacao movimentacao) {
+        movimentacoes.add(movimentacao);
     }
 
     public int getAno() {
@@ -22,6 +22,7 @@ public class Ano {
     }
 
     public List<Movimentacao> getMovimentacoes() {
-        return movimentacoes;
+        return List.copyOf(movimentacoes);
     }
 }
+

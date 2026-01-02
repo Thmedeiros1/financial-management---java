@@ -8,14 +8,14 @@ import thmedeiros_projeto.enums.TipoRenda;
 
 public class Renda extends Movimentacao {
 
-    private TipoRenda tipo;
+    private TipoRenda tipoRenda;
 
-    public Renda(LocalDate data, BigDecimal valor, Moeda moeda, TipoRenda tipo) {
+    public Renda(LocalDate data, BigDecimal valor, Moeda moeda, TipoRenda tipoRenda) {
         super(data, valor, moeda);
-        this.tipo = tipo;
+        this.tipoRenda = tipoRenda;
     }
 
-    public TipoRenda getTipo() {
-        return tipo;
+    public TipoRenda getTipoRenda() {
+        return tipoRenda;
     }
 }

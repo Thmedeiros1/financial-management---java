@@ -8,14 +8,16 @@ import thmedeiros_projeto.enums.TipoDespesa;
 
 public class Despesa extends Movimentacao {
 
-    private TipoDespesa tipo;
+    private TipoDespesa tipoDespesa;
 
-    public Despesa(LocalDate data, BigDecimal valor, Moeda moeda, TipoDespesa tipo) {
+    public Despesa(LocalDate data, BigDecimal valor, Moeda moeda, TipoDespesa tipoDespesa) {
         super(data, valor, moeda);
-        this.tipo = tipo;
+        this.tipoDespesa = tipoDespesa;
     }
 
-    public TipoDespesa getTipo() {
-        return tipo;
+    public TipoDespesa getTipoDespesa() {
+        return tipoDespesa;
     }
 }
+
+
